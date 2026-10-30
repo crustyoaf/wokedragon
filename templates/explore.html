@@ -23,7 +23,9 @@
 
     
     {% for community in communities %}
-        {% include "_community_card.html" %}
-    {% endfor %}
+    {% include "_community_card.html" %}
+{% else %}
+    <p>No communities match "{{ search_query }}".</p>
+{% endfor %}
 </section>
 {% endblock %}

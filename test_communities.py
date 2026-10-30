@@ -73,3 +73,11 @@ def test_search_is_case_insensitive():
 
 def test_empty_search_returns_all_communities():
     assert len(search_communities("   ")) == 4
+    
+    
+def test_explore_search_with_no_results(client):
+    response = client.get("/explore?q=xyz")
+
+    assert response.status_code == 200
+    assert b"No communities match" in response.data
+    assert b"Lorem ipsum" not in response.data
