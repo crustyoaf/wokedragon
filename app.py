@@ -35,10 +35,6 @@ def explore():
 def community_detail(slug):
     community = get_community_by_slug(slug)
 
-    community = next(
-    (item for item in COMMUNITIES if item["slug"] == slug),
-    None
-)
 
     if community is None:
         abort(404)
