@@ -1,9 +1,16 @@
+import os
+
+from extensions import db
+
 from flask import Flask, render_template, request, abort
 
 from communities import get_community_by_slug, search_communities
 
 app = Flask(__name__)
 app.config["TESTING"] = False
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+db.init_app(app)
 
 
 # Show the home page when someone visits the root URL.
