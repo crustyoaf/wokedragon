@@ -1,6 +1,7 @@
 import os
+import models
 
-from extensions import db
+from extensions import db, migrate
 
 from flask import Flask, render_template, request, abort
 
@@ -11,6 +12,7 @@ app.config["TESTING"] = False
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db.init_app(app)
+migrate.init_app(app, db)
 
 
 # Show the home page when someone visits the root URL.
