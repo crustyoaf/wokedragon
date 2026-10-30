@@ -1,6 +1,6 @@
 import pytest
 from app import app
-from communities import get_community_by_slug
+from communities import get_community_by_slug, search_communities
 
 
 @pytest.fixture
@@ -65,4 +65,11 @@ def test_home_page_returns_html(client):
 
     assert response.content_type == "text/html; charset=utf-8"
     
-    
+def test_search_is_case_insensitive():
+    results = search_communities("MINDFUL")
+
+    assert [c["slug"] for c in results] == ["mindful-living"]
+
+
+def test_empty_search_returns_all_communities():
+    assert len(search_communities("   ")) == 4

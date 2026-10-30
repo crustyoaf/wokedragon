@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, abort
 
-from communities import COMMUNITIES, get_community_by_slug
+from communities import get_community_by_slug, search_communities
 
 app = Flask(__name__)
 app.config["TESTING"] = False
@@ -16,19 +16,13 @@ def home():
 
 @app.route("/explore")
 def explore():
-    
     search_query = request.args.get("q", "").strip()
-    
+
     return render_template(
         "explore.html",
         page_title="Explore",
-        search_query=search_query,      
-        communities=[
-    community for community in COMMUNITIES
-    if search_query.lower() in (
-        community["name"] + " " + community["description"]
-    ).lower()
-]
+        search_query=search_query,
+        communities=search_communities(search_query)
     )
     
 @app.route("/community/<slug>")
