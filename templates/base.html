@@ -1,0 +1,30 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Wokedragon{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>WokeDragon</h1>
+        <nav>
+            <a href="{{url_for('home')}}" class="nav-link {% if request.endpoint == 'home' %}active{%endif %}">Home</a>
+            <a href="{{url_for('explore')}}" class="nav-link {% if request.endpoint == 'explore' %}active{% endif %}">Explore</a>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        {% block page_heading %}
+            <h2>{{ page_title }}</h2>
+
+            {% if page_subtitle %}
+                <p>{{ page_subtitle }}</p>
+            {% endif %}
+        {% endblock %}
+    
+        {% block content %}{% endblock %}</main>
+</body>
+</html>

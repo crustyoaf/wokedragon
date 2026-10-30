@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+
+{% block title %}Explore | Wokedragon{% endblock %}
+
+
+{% block content %}
+    <section>
+    
+    <form action="{{ url_for('explore') }}" method="get">
+    <label for="q">Search communities</label>
+    <input
+        type="search"
+        id="q"
+        name="q"
+        placeholder="Search by name or description"
+        value="{{ search_query }}"
+    >
+    <button type="submit">Search</button>
+</form>
+    
+    <h3>Communities</h3>
+
+    
+    {% for community in communities %}
+        {% include "_community_card.html" %}
+    {% endfor %}
+</section>
+{% endblock %}
