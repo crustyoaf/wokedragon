@@ -1,13 +1,37 @@
+import os
+
 import pytest
+
 from app import create_app
 from communities import get_community_by_slug, search_communities
+from extensions import db
+from models import Community
+
+TEST_COMMUNITIES = [
+    {"name": "Lorem ipsum", "slug": "lorem-ipsum", "description": "Lorem ipsum dolor sit amet."},
+    {"name": "Dolor sit amet", "slug": "dolor-sit-amet", "description": "Consectetur adipiscing elit."},
+    {"name": "Consectetur adipiscing", "slug": "consectetur-adipiscing", "description": "Sed do eiusmod tempor incididunt."},
+    {"name": "Mindful Living", "slug": "mindful-living", "description": "A space for reflection and everyday wellbeing."},
+]
 
 
 @pytest.fixture
 def app():
-    app = create_app()
-    app.config.update(TESTING=True)
+    app = create_app({
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": os.environ["TEST_DATABASE_URL"],
+    })
+
+    with app.app_context():
+        db.create_all()
+        db.session.add_all(Community(**item) for item in TEST_COMMUNITIES)
+        db.session.commit()
+
     yield app
+
+    with app.app_context():
+        db.session.remove()
+        db.drop_all()
 
 
 @pytest.fixture
