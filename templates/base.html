@@ -11,8 +11,8 @@
     <header>
         <h1>WokeDragon</h1>
         <nav>
-            <a href="{{url_for('home')}}" class="nav-link {% if request.endpoint == 'home' %}active{%endif %}">Home</a>
-            <a href="{{url_for('explore')}}" class="nav-link {% if request.endpoint == 'explore' %}active{% endif %}">Explore</a>
+            <a href="{{url_for('main.home')}}" class="nav-link {% if request.endpoint == 'main.home' %}active{%endif %}">Home</a>
+            <a href="{{url_for('main.explore')}}" class="nav-link {% if request.endpoint == 'main.explore' %}active{% endif %}">Explore</a>
         </nav>
     </header>
 
