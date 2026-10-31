@@ -1,19 +1,22 @@
 import pytest
-from app import app
+from app import create_app
 from communities import get_community_by_slug, search_communities
 
 
 @pytest.fixture
-def client():
-    app.config["TESTING"] = True
+def app():
+    app = create_app()
+    app.config.update(TESTING=True)
+    yield app
 
-    with app.test_client() as client:
-        yield client
 
-    app.config["TESTING"] = False
-    
 @pytest.fixture
-def app_context():
+def client(app):
+    return app.test_client()
+
+
+@pytest.fixture
+def app_context(app):
     with app.app_context():
         yield
 
