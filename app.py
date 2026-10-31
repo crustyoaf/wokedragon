@@ -1,11 +1,11 @@
 import os
-import models
+from models import Community
 
 from extensions import db, migrate
 
 from flask import Flask, render_template, request, abort
 
-from communities import get_community_by_slug, search_communities
+from communities import COMMUNITIES, get_community_by_slug, search_communities
 
 app = Flask(__name__)
 app.config["TESTING"] = False
@@ -50,7 +50,27 @@ def community_detail(slug):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template("404.html"), 404    
+    return render_template("404.html"), 404
+    
+@app.cli.command("seed")
+def seed():
+    """Add placeholder communities for local development."""
+    for item in COMMUNITIES:
+        existing = db.session.scalar(
+            db.select(Community).where(Community.slug == item["slug"])
+        )
+        if existing is None:
+            db.session.add(
+                Community(
+                    name=item["name"],
+                    slug=item["slug"],
+                    description=item["description"],
+                )
+            )
+
+    db.session.commit()
+    print("Seeded communities.")    
+       
     
 if __name__ == "__main__":
     app.run(debug=True)
