@@ -1,3 +1,7 @@
+from sqlalchemy import or_
+
+from extensions import db
+from models import Community
 
 COMMUNITIES = [
     {
@@ -27,19 +31,21 @@ COMMUNITIES = [
 ]
 
 def get_community_by_slug(slug):
-    return next(
-        (item for item in COMMUNITIES if item["slug"] == slug),
-        None
+    return db.session.scalar(
+        db.select(Community).where(Community.slug == slug)
     )
-    
+
+
 def search_communities(query):
-    query = query.strip().lower()
+    query = query.strip()
+    statement = db.select(Community).order_by(Community.name)
 
-    if not query:
-        return COMMUNITIES
+    if query:
+        statement = statement.where(
+            or_(
+                Community.name.icontains(query, autoescape=True),
+                Community.description.icontains(query, autoescape=True),
+            )
+        )
 
-    return [
-        community for community in COMMUNITIES
-        if query in community["name"].lower()
-        or query in community["description"].lower()
-    ]
+    return db.session.scalars(statement).all()

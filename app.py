@@ -44,7 +44,7 @@ def community_detail(slug):
 
     return render_template(
         "community.html",
-        page_title=community["name"],
+        page_title=community.name,
         community=community
     )
 

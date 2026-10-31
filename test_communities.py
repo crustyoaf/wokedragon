@@ -11,15 +11,20 @@ def client():
         yield client
 
     app.config["TESTING"] = False
+    
+@pytest.fixture
+def app_context():
+    with app.app_context():
+        yield
 
-def test_existing_community():
+def test_existing_community(app_context):
     community = get_community_by_slug("lorem-ipsum")
 
     assert community is not None
-    assert community["name"] == "Lorem ipsum"
+    assert community.name == "Lorem ipsum"
 
 
-def test_missing_community():
+def test_missing_community(app_context):
     community = get_community_by_slug("poop")
 
     assert community is None
@@ -65,13 +70,13 @@ def test_home_page_returns_html(client):
 
     assert response.content_type == "text/html; charset=utf-8"
     
-def test_search_is_case_insensitive():
+def test_search_is_case_insensitive(app_context):
     results = search_communities("MINDFUL")
 
-    assert [c["slug"] for c in results] == ["mindful-living"]
+    assert [c.slug for c in results] == ["mindful-living"]
 
 
-def test_empty_search_returns_all_communities():
+def test_empty_search_returns_all_communities(app_context):
     assert len(search_communities("   ")) == 4
     
     
